@@ -17,7 +17,7 @@ namespace EventPlanning.Server.Controllers
         [HttpGet]
         public IEnumerable<EventModel> Index()
         {
-            
+            return Enumerable.Empty<EventModel>();
         }
     }
 }
