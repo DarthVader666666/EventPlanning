@@ -4,6 +4,7 @@ using EventPlanning.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EventPlanning.Data.Migrations
 {
     [DbContext(typeof(EventPlanningDbContext))]
-    partial class EventPlanningDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240708180228_Added_Password_to_User_entity")]
+    partial class Added_Password_to_User_entity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -111,22 +114,6 @@ namespace EventPlanning.Data.Migrations
                     b.ToTable("ParticipantEvents");
                 });
 
-            modelBuilder.Entity("EventPlanning.Data.Entities.Role", b =>
-                {
-                    b.Property<int>("RoleId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RoleId"));
-
-                    b.Property<string>("RoleName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("RoleId");
-
-                    b.ToTable("Roles");
-                });
-
             modelBuilder.Entity("EventPlanning.Data.Entities.SubTheme", b =>
                 {
                     b.Property<int>("SubThemeId")
@@ -203,19 +190,6 @@ namespace EventPlanning.Data.Migrations
                     b.HasKey("EventId", "UserId");
 
                     b.ToTable("UserEvents");
-                });
-
-            modelBuilder.Entity("EventPlanning.Data.Entities.UserRole", b =>
-                {
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RoleId")
-                        .HasColumnType("int");
-
-                    b.HasKey("UserId", "RoleId");
-
-                    b.ToTable("UserRoles");
                 });
 
             modelBuilder.Entity("EventPlanning.Data.Entities.Event", b =>

@@ -22,6 +22,8 @@ namespace EventPlanning.Server.Configurations
 
                     autoMapperConfig.CreateMap<Theme, ThemeIndexModel>()
                         .ForMember(tm => tm.SubThemes, opt => opt.MapFrom(t => GetSubThemes(t.SubThemes)));
+
+                    autoMapperConfig.CreateMap<UserRegisterModel, User>();
                 });
 
                 return config.CreateMapper();

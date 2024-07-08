@@ -2,8 +2,10 @@ using AutoMapper;
 using EventPlanning.Bll.Interfaces;
 using EventPlanning.Data.Entities;
 using EventPlanning.Server.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 
 namespace EventPlanning.Server.Controllers
 {
@@ -32,17 +34,21 @@ namespace EventPlanning.Server.Controllers
         }
 
         [HttpPost]
-        public async Task Create(EventCreateModel model)
+        [Route("create")]
+        [Authorize(Roles = "User, Admin")]
+        public async Task<IActionResult> Create(EventCreateModel model)
         {
             try
             {
                 var newEvent = _mapper.Map<EventCreateModel, Event>(model);
                 await _eventRepository.CreateAsync(newEvent);
             }
-            catch (Exception ex)
+            catch (SqlException)
             {
-                _logger.LogError(ex, "Error while creating event");
+                return BadRequest("Error while creating event");
             }
+
+            return Ok("Event created");
         }
     }
 }

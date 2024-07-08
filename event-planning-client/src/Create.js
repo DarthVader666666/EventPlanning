@@ -5,18 +5,20 @@ import { useNavigate } from "react-router";
 const Create = () => {
   const serverBaseUrl = process.env.REACT_APP_API_URL;
   const [title, setTitle] = useState('');
-  const [themeId, setThemeId] = useState('');
-  const [subThemeId, setSubThemeId] = useState('');
+  const [themeId, setThemeId] = useState(null);
+  const [subThemeId, setSubThemeId] = useState(null);
   const [date, setDate] = useState('');
   const [location, setLocation] = useState('');
   const { data: themes } = useFetch(`${serverBaseUrl}/themes/`);
   const [subThemes, setSubThemes] = useState();
   const [participants, setParticipants] = useState([]);
-  const [dressCode, setDressCode] = useState(false);
+  const [dressCode, setDressCode] = useState('false');
   const [amountOfVacantPlaces, setAmountOfVacantPlaces] = useState(0);
 
   const [isPending, setIsPending] = useState(false);
   const navigate = useNavigate();
+
+  const token = sessionStorage.getItem("access_token");
 
   const handleSubmit = (e) => 
   {
@@ -24,20 +26,19 @@ const Create = () => {
     const newEvent = {title, themeId, subThemeId, date, dressCode, participants, location, amountOfVacantPlaces};
 
     setIsPending(true);
+    
+    fetch(`${serverBaseUrl}/events/create/`, 
+      {
+        method: "POST",
+        headers: 
+        {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + token
+        },
+        body: JSON.stringify(newEvent)
+      }).then(() => setIsPending(false));
 
-    setTimeout(() => {
-      fetch(`${serverBaseUrl}/events/`, 
-          {
-            method: "POST",
-            headers: 
-            {
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify(newEvent)
-          }).then(() => setIsPending(false));
-
-          navigate('/');
-    }, 200); 
+      navigate('/');
   }
 
   return (
@@ -48,7 +49,7 @@ const Create = () => {
         <input type="text" required value={title} onChange={(e) => setTitle(e.target.value)}></input>
 
         <label>Date</label>
-        <input type="date" required value={date} onChange={(e) => setDate(e.target.value)}></input>
+        <input type="datetime-local" required value={date} onChange={(e) => setDate(e.target.value)}></input>
 
         <label>Location</label>
         <input type="text" required value={location} onChange={(e) => setLocation(e.target.value)}></input>

@@ -8,8 +8,12 @@ const Navbar = () => {
       <h1>The Best Event Planning App</h1>
       <div className="links">
         <Link to="/">Home</Link>
-        <Link to="/create" className="create-button">New Event</Link>
-        <Link to="/login">{name ? name : "Log In"}</Link>
+        {
+          name &&
+          <Link to="/create" className="create-button">New Event</Link>
+        }
+        <Link to="/login/">{name ? name : "Log In"}</Link>
+        <Link to="/register/">Register</Link>
       </div>
     </nav>
   );
