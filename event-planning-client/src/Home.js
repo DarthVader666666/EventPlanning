@@ -1,17 +1,17 @@
-import BlogList from "./EventList";
+import EventList from "./EventList";
 import useFetch from "./useFetch";
 
 const Home = () => {
   const environmentName = process.env.REACT_APP_ENV;
   const serverBaseUrl = process.env.REACT_APP_API_URL;
-  const { error, isPending, data: blogs } = useFetch(`${serverBaseUrl}/events/`)
-  
-    return (
+  const { error, isPending, data: events } = useFetch(`${serverBaseUrl}/events/`)
+
+  return (
     <div className="home">
       Environment: {environmentName}
       { error && <div>{ error }</div> }
       { isPending && <div>Loading...</div> }
-      { blogs && <BlogList blogs={blogs} /> }
+      { events && <EventList events={events} /> }
     </div>
   );
 }

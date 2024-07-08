@@ -2,8 +2,8 @@
   "profiles": {
     "http": {
       "commandName": "Project",
-      "launchBrowser": true,
-      "launchUrl": "home",
+      "launchBrowser": false,
+      "launchUrl": "events",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
@@ -12,8 +12,8 @@
     },
     "https": {
       "commandName": "Project",
-      "launchBrowser": true,
-      "launchUrl": "home",
+      "launchBrowser": false,
+      "launchUrl": "events",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
@@ -22,15 +22,15 @@
     },
     "IIS Express": {
       "commandName": "IISExpress",
-      "launchBrowser": true,
-      "launchUrl": "home",
+      "launchBrowser": false,
+      "launchUrl": "events",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
     "Container (Dockerfile)": {
       "commandName": "Docker",
-      "launchBrowser": true,
+      "launchBrowser": false,
       "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/home",
       "environmentVariables": {
         "ASPNETCORE_HTTPS_PORTS": "8081",

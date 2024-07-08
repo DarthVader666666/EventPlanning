@@ -4,6 +4,5 @@
     {
         public int LocationId { get; set; }
         public string? LocationType { get; set; }
-        public string? Address { get; set; }
     }
 }

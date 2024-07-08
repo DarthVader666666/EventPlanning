@@ -1,6 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
 
-/* base styles */
 * {
   margin: 0;
   font-family: "Quicksand";
@@ -43,14 +42,22 @@
   padding: 20px;
 }
 
+.dress-code {
+  display: flex;
+  align-items: start;
+}
 
 
-/* blog previews / list */
+.add-participant {
+  display: flex;
+}
+
 .event-preview {
   padding: 10px 16px;
   margin: 20px 0;
   border-bottom: 1px solid #fafafa;
 }
+
 .event-preview:hover {
   box-shadow: 1px 3px 5px rgba(0,0,0,0.1);
 }
@@ -63,7 +70,6 @@
   text-decoration: none;
 }
 
-/* blog details page */
 .event-details h2 {
   font-size: 20px;
   color: #f1356d;
@@ -81,7 +87,6 @@
   cursor: pointer;
 }
 
-/* create new blog form */
 .create {
   max-width: 400px;
   margin: 0 auto;

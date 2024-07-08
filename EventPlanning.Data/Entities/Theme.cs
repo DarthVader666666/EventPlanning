@@ -4,6 +4,6 @@
     {
         public int ThemeId { get; set; }
         public string? ThemeName { get; set; }
-        public SubTheme[]? SubThemes { get; set; }
+        public ICollection<SubTheme>? SubThemes { get; set; }
     }
 }

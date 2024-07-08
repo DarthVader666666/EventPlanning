@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventPlanning.Server", "Eve
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventPlanning.Data", "EventPlanning.Data\EventPlanning.Data.csproj", "{4535C221-165F-4033-B460-7A565107375A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventPlanning.Bll", "EventPlanning.Bll\EventPlanning.Bll.csproj", "{44C7093A-402E-4F61-ACDB-99AE209B1642}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{4535C221-165F-4033-B460-7A565107375A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4535C221-165F-4033-B460-7A565107375A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4535C221-165F-4033-B460-7A565107375A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44C7093A-402E-4F61-ACDB-99AE209B1642}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44C7093A-402E-4F61-ACDB-99AE209B1642}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44C7093A-402E-4F61-ACDB-99AE209B1642}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44C7093A-402E-4F61-ACDB-99AE209B1642}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

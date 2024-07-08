@@ -4,6 +4,7 @@ using EventPlanning.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EventPlanning.Data.Migrations
 {
     [DbContext(typeof(EventPlanningDbContext))]
-    partial class EventPlanningDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240706150641_Seed_Themes")]
+    partial class Seed_Themes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -24,14 +27,11 @@ namespace EventPlanning.Data.Migrations
 
             modelBuilder.Entity("EventPlanning.Data.Entities.Event", b =>
                 {
-                    b.Property<int>("EventId")
+                    b.Property<int?>("EventId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EventId"));
-
-                    b.Property<string>("Address")
-                        .HasColumnType("nvarchar(max)");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("EventId"));
 
                     b.Property<int?>("AmountOfVacantPlaces")
                         .HasColumnType("int");
@@ -42,11 +42,8 @@ namespace EventPlanning.Data.Migrations
                     b.Property<bool?>("DressCode")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Location")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Participants")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("LocationId")
+                        .HasColumnType("int");
 
                     b.Property<int?>("ThemeId")
                         .HasColumnType("int");
@@ -55,6 +52,8 @@ namespace EventPlanning.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("EventId");
+
+                    b.HasIndex("LocationId");
 
                     b.HasIndex("ThemeId");
 
@@ -68,6 +67,9 @@ namespace EventPlanning.Data.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LocationId"));
+
+                    b.Property<string>("Address")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LocationType")
                         .HasColumnType("nvarchar(max)");
@@ -113,16 +115,16 @@ namespace EventPlanning.Data.Migrations
 
             modelBuilder.Entity("EventPlanning.Data.Entities.SubTheme", b =>
                 {
-                    b.Property<int>("SubThemeId")
+                    b.Property<int?>("SubThemeId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SubThemeId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("SubThemeId"));
 
                     b.Property<string>("SubThemeName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("ThemeId")
+                    b.Property<int>("ThemeId")
                         .HasColumnType("int");
 
                     b.HasKey("SubThemeId");
@@ -188,9 +190,15 @@ namespace EventPlanning.Data.Migrations
 
             modelBuilder.Entity("EventPlanning.Data.Entities.Event", b =>
                 {
+                    b.HasOne("EventPlanning.Data.Entities.Location", "Location")
+                        .WithMany()
+                        .HasForeignKey("LocationId");
+
                     b.HasOne("EventPlanning.Data.Entities.Theme", "Theme")
                         .WithMany()
                         .HasForeignKey("ThemeId");
+
+                    b.Navigation("Location");
 
                     b.Navigation("Theme");
                 });
@@ -208,7 +216,9 @@ namespace EventPlanning.Data.Migrations
                 {
                     b.HasOne("EventPlanning.Data.Entities.Theme", "Theme")
                         .WithMany("SubThemes")
-                        .HasForeignKey("ThemeId");
+                        .HasForeignKey("ThemeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Theme");
                 });

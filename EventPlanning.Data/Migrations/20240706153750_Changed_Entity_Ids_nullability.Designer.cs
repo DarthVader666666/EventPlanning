@@ -4,6 +4,7 @@ using EventPlanning.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EventPlanning.Data.Migrations
 {
     [DbContext(typeof(EventPlanningDbContext))]
-    partial class EventPlanningDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240706153750_Changed_Entity_Ids_nullability")]
+    partial class Changed_Entity_Ids_nullability
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -42,11 +45,8 @@ namespace EventPlanning.Data.Migrations
                     b.Property<bool?>("DressCode")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Location")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Participants")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("LocationId")
+                        .HasColumnType("int");
 
                     b.Property<int?>("ThemeId")
                         .HasColumnType("int");
@@ -55,6 +55,8 @@ namespace EventPlanning.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("EventId");
+
+                    b.HasIndex("LocationId");
 
                     b.HasIndex("ThemeId");
 
@@ -188,9 +190,15 @@ namespace EventPlanning.Data.Migrations
 
             modelBuilder.Entity("EventPlanning.Data.Entities.Event", b =>
                 {
+                    b.HasOne("EventPlanning.Data.Entities.Location", "Location")
+                        .WithMany()
+                        .HasForeignKey("LocationId");
+
                     b.HasOne("EventPlanning.Data.Entities.Theme", "Theme")
                         .WithMany()
                         .HasForeignKey("ThemeId");
+
+                    b.Navigation("Location");
 
                     b.Navigation("Theme");
                 });

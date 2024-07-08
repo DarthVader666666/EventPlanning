@@ -7,9 +7,10 @@
         public bool? DressCode { get; set; } = false;
         public DateTime? Date { get; set; }
         public int? AmountOfVacantPlaces { get; set; }
+        public string? Address { get; set; }
         public int? ThemeId { get; set; }
-        public int? LocationId { get; set; }
-        public Location? Location { get; set; }
+        public string? Location { get; set; }
+        public string? Participants { get; set; }
         public Theme? Theme { get; set; }
     }
 }

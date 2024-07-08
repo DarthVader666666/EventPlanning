@@ -1,4 +1,7 @@
 ﻿using AutoMapper;
+using EventPlanning.Data.Entities;
+using EventPlanning.Server.Models;
+using Microsoft.IdentityModel.Tokens;
 
 namespace EventPlanning.Server.Configurations
 {
@@ -10,11 +13,59 @@ namespace EventPlanning.Server.Configurations
             {
                 var config = new MapperConfiguration(autoMapperConfig =>
                 {
+                    autoMapperConfig.CreateMap<Event, EventIndexModel>()
+                        .ForMember(eim => eim.ThemeName, opt => opt.MapFrom(e => e.Theme.ThemeName))
+                        .ForMember(eim => eim.SubThemeNames, opt => opt.MapFrom(e => GetSubThemeNames(e.Theme.SubThemes)));
 
+                    autoMapperConfig.CreateMap<EventCreateModel, Event>()
+                        .ForMember(e => e.Participants, opt => opt.MapFrom(ecm => ecm.Participants != null ? string.Join(",", ecm.Participants) : null));
+
+                    autoMapperConfig.CreateMap<Theme, ThemeIndexModel>()
+                        .ForMember(tm => tm.SubThemes, opt => opt.MapFrom(t => GetSubThemes(t.SubThemes)));
                 });
 
                 return config.CreateMapper();
             });
+        }
+
+        private static string[]? GetSubThemeNames(ICollection<SubTheme>? subThemes)
+        { 
+            if(subThemes.IsNullOrEmpty())
+            {
+                return null;
+            }
+
+            IEnumerable<string?> GetNames()
+            {
+                foreach (var subTheme in subThemes!)
+                { 
+                    yield return subTheme?.SubThemeName;
+                }
+            }
+
+            return GetNames().ToArray();
+        }
+
+        private static SubThemeIndexModel[]? GetSubThemes(ICollection<SubTheme>? subThemes)
+        {
+            if (subThemes.IsNullOrEmpty())
+            {
+                return null;
+            }
+
+            IEnumerable<SubThemeIndexModel> GetSubThemesCore()
+            {
+                foreach (var subTheme in subThemes!)
+                {
+                    yield return new SubThemeIndexModel()
+                    {
+                        SubThemeId = subTheme?.SubThemeId,
+                        SubThemeName = subTheme?.SubThemeName
+                    };
+                }
+            }
+
+            return GetSubThemesCore().ToArray();
         }
     }
 }
