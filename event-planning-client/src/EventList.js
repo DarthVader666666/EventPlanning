@@ -5,7 +5,7 @@ const EventList = ({ events }) => {
     <div className="event-list">
       { events.map((event, index) => (
         <div className="event-preview" key={index} >
-          <Link to={`/events/${event.eventId}`}>
+          <Link to={`/${event.eventId}`}>
             <h2>{ event.title }</h2>
           </Link>
         </div>

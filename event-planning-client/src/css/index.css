@@ -15,8 +15,9 @@
   border-bottom: 1px solid #f2f2f2;
   background-color: #fff;
 }
-.navbar h1 {
+h1 {
   color: #f1356d;
+  padding-bottom: 5vh;
 }
 .navbar .links {
   margin-left: auto;

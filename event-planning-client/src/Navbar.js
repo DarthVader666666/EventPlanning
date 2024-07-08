@@ -1,6 +1,18 @@
 import { Link } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 
 const Navbar = () => {
+  const jwtToken = sessionStorage.getItem("access_token");
+
+  if(jwtToken)
+  {
+    const token = jwtDecode(jwtToken);
+    
+    if (token.exp * 1000 < new Date().getTime()) {
+      sessionStorage.clear();
+    }
+  }
+
   const name = sessionStorage.getItem("user_name");
 
   return (

@@ -63,7 +63,7 @@ namespace EventPlanning.Server.Controllers
         [Route("register")]
         public async Task<IActionResult> Register(UserRegisterModel userRegister)
         {
-            if (await DoesUserExist(userRegister?.Password, userRegister?.Email))
+            if (await DoesUserExist(userRegister?.Email))
             {
                 return BadRequest(new { errorText = "User with this email already exists." });
             }
@@ -81,13 +81,13 @@ namespace EventPlanning.Server.Controllers
 
         private async Task<ClaimsIdentity?> GetIdentity(UserLogInModel userLogIn)
         {
-            var user = await _userRepository.GetAsync(new Tuple<string?, string?>(userLogIn.Password, userLogIn.Email));
+            var user = await _userRepository.GetAsync(userLogIn.Email);
 
             if (user != null)
             {
                 var claims = new List<Claim>
                 {
-                    new Claim(ClaimsIdentity.DefaultNameClaimType, user.FirstName ?? "Anonymus"),
+                    new Claim(ClaimsIdentity.DefaultNameClaimType, user.Email ?? "Anonymus"),
                     new Claim(ClaimsIdentity.DefaultRoleClaimType, "User")
                 };
 
@@ -99,9 +99,9 @@ namespace EventPlanning.Server.Controllers
             return null;
         }
 
-        private async Task<bool> DoesUserExist(string? password, string? username)
+        private async Task<bool> DoesUserExist(string? email)
         {
-            return await _userRepository.GetAsync(new Tuple<string?, string?>(password, username)) != null;
+            return await _userRepository.GetAsync(email) != null;
         }
 
         public static class AuthOptions

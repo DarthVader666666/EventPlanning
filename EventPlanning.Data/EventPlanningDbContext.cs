@@ -11,6 +11,7 @@ namespace EventPlanning.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<User>().HasIndex(x => x.Email).IsUnique();
             modelBuilder.Entity<ParticipantEvent>().HasKey(x => new { x.EventId, x.ParticipantId });
             modelBuilder.Entity<UserEvent>().HasKey(x => new { x.EventId, x.UserId });
             modelBuilder.Entity<UserRole>().HasKey(x => new { x.UserId, x.RoleId });

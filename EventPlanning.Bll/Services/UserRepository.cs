@@ -30,16 +30,15 @@ namespace EventPlanning.Bll.Services
             throw new NotImplementedException();
         }
 
-        public Task<User?> GetAsync(object? creds)
+        public Task<User?> GetAsync(object? email)
         {
-            if (creds == null)
+            if (email == null)
             {
                 return Task.FromResult<User?>(null);
             }
 
-            var credentials = (Tuple<string?, string?>?)creds;
             var user = _dbContext.Users.Any() 
-                ? _dbContext.Users.FirstOrDefault(x => x.Password == credentials!.Item1 && x.Email == credentials.Item2)
+                ? _dbContext.Users.FirstOrDefault(x => x.Email == (string?)email)
                 : null;
 
             return Task.Run(() => user);

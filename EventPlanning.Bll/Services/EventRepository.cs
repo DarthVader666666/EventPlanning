@@ -31,9 +31,9 @@ namespace EventPlanning.Bll.Services
             throw new NotImplementedException();
         }
 
-        public Task<Event?> GetAsync(object? id)
+        public async Task<Event?> GetAsync(object? id)
         {
-            throw new NotImplementedException();
+            return await _dbContext.Events.FirstOrDefaultAsync(x => x.EventId == (int?)id);
         }
 
         public async Task<IEnumerable<Event?>> GetListAsync()

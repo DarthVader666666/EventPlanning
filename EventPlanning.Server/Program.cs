@@ -12,7 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddCors(opts => opts.AddPolicy("AllowClient", policy =>
-policy.WithOrigins($"http://localhost:3000/*", $"http://localhost:3000", $"http://localhost:3000/authorization/login/")
+policy.WithOrigins($"http://localhost:3000/*", $"http://localhost:3000")
     .AllowAnyHeader()
     .AllowAnyMethod()
     ));
@@ -45,6 +45,8 @@ builder.Services.ConfigureAutomapper();
 builder.Services.AddScoped<IRepository<Event>, EventRepository>();
 builder.Services.AddScoped<IRepository<Theme>, ThemeRepository>();
 builder.Services.AddScoped<IRepository<User>, UserRepository>();
+builder.Services.AddScoped<IRepository<UserEvent>, UserEventRepository>();
+builder.Services.AddScoped<EmailSender>();
 
 using var scope = builder.Services.BuildServiceProvider().CreateScope();
 var dbContext = scope.ServiceProvider.GetRequiredService<EventPlanningDbContext>();

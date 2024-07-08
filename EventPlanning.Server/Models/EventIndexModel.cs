@@ -2,6 +2,7 @@
 {
     public class EventIndexModel
     {
+        public int? EventId { get; set; }
         public string? Title { get; set; }
         public bool? DressCode { get; set; }
         public string? ThemeName { get; set; }

@@ -44,15 +44,18 @@ const LogIn = () => {
         }
         
         navigate("/");
+        window.location.reload();
     };
 
     const isLoggedIn = () => sessionStorage.getItem("user_name");
 
     return (
+        
         <div className="login">
             {
                 !isLoggedIn() ? 
                 <form onSubmit={handleSubmit}>
+                    <h1>Log In</h1>
                     <label>Email</label>
                     <input required type="email" value={email} onChange={(e) => setEmail(e.target.value)}></input>
                     <label>Password</label>
