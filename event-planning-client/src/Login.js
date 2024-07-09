@@ -27,23 +27,23 @@ const LogIn = () => {
                     },
                     method: "POST"
                 })
-            .then(response => 
+            .then(async response => 
                 {
                     if(response.status === 400)
                     {
                         alert("Incorrect credentials");
                         navigate("/login/");
                     }
-                    return response.json();
+                    else
+                    {
+                        const data = await response.json();
+                        sessionStorage.setItem("access_token", data.access_token);
+                        sessionStorage.setItem("user_name", data.user_name);
+                        navigate("/");
+                    }
                 })
-            .then(data => 
-                {
-                    sessionStorage.setItem("access_token", data.access_token);
-                    sessionStorage.setItem("user_name", data.user_name);
-                });
         }
         
-        navigate("/");
         window.location.reload();
     };
 

@@ -30,7 +30,7 @@ namespace EventPlanning.Bll.Services
             throw new NotImplementedException();
         }
 
-        public Task<User?> GetAsync(object? email)
+        public Task<User?> GetByEmailAsync(string? email)
         {
             if (email == null)
             {
@@ -39,6 +39,21 @@ namespace EventPlanning.Bll.Services
 
             var user = _dbContext.Users.Any() 
                 ? _dbContext.Users.FirstOrDefault(x => x.Email == (string?)email)
+                : null;
+
+            return Task.Run(() => user);
+        }
+
+        public Task<User?> GetAsync(object? IdOrEmail)
+        {
+            if (IdOrEmail == null)
+            {
+                return Task.FromResult<User?>(null);
+            }
+
+            var user = _dbContext.Users.Any()
+                ? _dbContext.Users.FirstOrDefault(x =>
+                IdOrEmail is string && ((string?)IdOrEmail!).Contains('@') ? x.Email == (string?)IdOrEmail : x.UserId == (int?)IdOrEmail)
                 : null;
 
             return Task.Run(() => user);

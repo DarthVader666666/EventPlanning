@@ -1,11 +1,11 @@
 using AutoMapper;
+using Azure.Communication.Email;
 using EventPlanning.Bll.Interfaces;
 using EventPlanning.Bll.Services;
 using EventPlanning.Data.Entities;
 using EventPlanning.Server.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
-using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 
@@ -20,15 +20,17 @@ namespace EventPlanning.Server.Controllers
         private readonly IRepository<User> _userRepository;
         private readonly IRepository<UserEvent> _userEventRepository;
         private readonly EmailSender _emailSender;
+        private readonly IConfiguration _configuration;
         private readonly IMapper _mapper;
 
         public EventsController(IMapper mapper, IRepository<Event> eventRepository, IRepository<User> userRepository, 
-            IRepository<UserEvent> userEventRepository, EmailSender emailSender)
+            IRepository<UserEvent> userEventRepository, EmailSender emailSender, IConfiguration configuration)
         {
             _eventRepository = eventRepository;
             _userRepository = userRepository;
             _userEventRepository = userEventRepository;
             _emailSender = emailSender;
+            _configuration = configuration;
             _mapper = mapper;
         }
 
@@ -92,12 +94,11 @@ namespace EventPlanning.Server.Controllers
                 await _userEventRepository.CreateAsync(userEvent);
             }
 
-            var url = Request.GetDisplayUrl().Replace("participate/", "confirm");
+            var url = _configuration["ClientUrl"] + $"/confirm/{userEvent.UserId}/{userEvent.EventId}";
 
-            var result = await _emailSender.SendEmailAsync(model.Email, "Thank you! Event participation confirmed!",
-                $"{url}?userId={userEvent.UserId}&eventId={userEvent.EventId}");
+            var result = await _emailSender.SendEmailAsync(model.Email, "Thank you! Event participation confirmed!", url);
 
-            if (result.HasCompleted)
+            if (result.Value.Status == EmailSendStatus.Succeeded)
             {
                 return Ok("Email sent");
             }
@@ -109,8 +110,8 @@ namespace EventPlanning.Server.Controllers
         }
 
         [HttpGet]
-        [Route("confirm")]
-        public async Task<IActionResult> Confirm([FromQuery] int? userId, [FromQuery]int? eventId)
+        [Route("/events/confirm/{userId:int}/{eventId:int}")]
+        public async Task<IActionResult> Confirm(int? userId, int? eventId)
         {
             var userEvent = await _userEventRepository.GetAsync(new Tuple<int?, int?>(userId, eventId));
 
@@ -120,7 +121,6 @@ namespace EventPlanning.Server.Controllers
             }
 
             userEvent.EmailConfirmed = true;
-
             await _userEventRepository.UpdateAsync(userEvent);
 
             return Ok();

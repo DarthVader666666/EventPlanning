@@ -4,6 +4,7 @@ import Create from './Create';
 import LogIn from './Login';
 import Register from './Register';
 import EventDetails from './EventDetails';
+import Confirm from './Confirm';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
             <Route path="/login/" element={<LogIn/>}></Route>
             <Route path="/register/" element={<Register/>}></Route>
             <Route path="/:eventId" element={<EventDetails />}></Route>
+            <Route path="/confirm/:userId/:eventId" element={<Confirm />}></Route>
           </Routes>
         </div>
       </div>

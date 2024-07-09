@@ -38,12 +38,14 @@ const EventDetails = () => {
       { event && (
         <article>
           <h2>{ event.title }</h2>
-          <p>Written by { event.location }</p>
+          <p>Location</p>
+          <div>{ event.location }</div>
+          <p>Date</p>
           <div>{ event.date }</div>
         </article>
       )}
 
-      {<button onClick={() => handleParticipate()}>Participate</button>}
+      { <button onClick={() => handleParticipate()}>Participate</button> }
     </div>
   );
 }
