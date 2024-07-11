@@ -7,6 +7,12 @@ const EventList = ({ events }) => {
         <div className="event-preview" key={index} >
           <Link to={`/${event.eventId}`}>
             <h2>{ event.title }</h2>
+            <h3>Location:</h3>
+            <div>{ event.location }</div>
+            <h3>Date:</h3>
+            <div>{ event.date }</div>
+            <h3>Participants:</h3>
+            <div>{ event.participants }</div>
           </Link>
         </div>
       ))}

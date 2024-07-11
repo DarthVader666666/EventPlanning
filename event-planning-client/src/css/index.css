@@ -37,10 +37,18 @@ h1 {
 .navbar a:hover {
   color: #a41a43;
 }
-.content {
-  max-width: 600px;
+.content {  
+  max-width: 1600px;
   margin: 40px auto;
   padding: 20px;
+  text-align: center;
+}
+
+.event-list {
+  display: flex;
+  flex-flow: row wrap;
+  gap: 1rem;
+  place-content: center;
 }
 
 .dress-code {
@@ -54,9 +62,13 @@ h1 {
 }
 
 .event-preview {
+  text-align: start;
+  min-width:180px;
+  height: 250px;
   padding: 10px 16px;
   margin: 20px 0;
   border-bottom: 1px solid #fafafa;
+  background-color: lightgray;
 }
 
 .event-preview:hover {

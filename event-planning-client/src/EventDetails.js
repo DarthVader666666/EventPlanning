@@ -36,13 +36,15 @@ const EventDetails = () => {
       { isPending && <div>Loading...</div> }
       { error && <div>{ error }</div> }
       { event && (
-        <article>
+        <div>
           <h2>{ event.title }</h2>
-          <p>Location</p>
+          <h3>Location:</h3>
           <div>{ event.location }</div>
-          <p>Date</p>
+          <h3>Date:</h3>
           <div>{ event.date }</div>
-        </article>
+          <h3>Participants:</h3>       
+          <div>{ event.participants }</div>
+        </div>
       )}
 
       { <button onClick={() => handleParticipate()}>Participate</button> }
