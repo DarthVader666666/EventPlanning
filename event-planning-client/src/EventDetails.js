@@ -37,7 +37,7 @@ const EventDetails = () => {
 
   return (
     <div className="event-details">
-      {isPending && (<div><h3>Sending confirmation on email... </h3><span>{email}</span></div>)}
+      {isPending && (<div><h3>Sending confirmation email... </h3><span>{email}</span></div>)}
       { event && (
         <div>
           <h2>{ event.title }</h2>
