@@ -123,6 +123,19 @@ namespace EventPlanning.Server.Controllers
             userEvent.EmailConfirmed = true;
             await _userEventRepository.UpdateAsync(userEvent);
 
+            var updatedEvent = await _eventRepository.GetAsync(eventId);
+
+            if (updatedEvent != null)
+            {
+                var amount = updatedEvent.AmountOfVacantPlaces > 0 ? (updatedEvent.AmountOfVacantPlaces - 1) : 0;
+                updatedEvent.AmountOfVacantPlaces = amount;
+                await _eventRepository.UpdateAsync(updatedEvent);
+            }
+            else
+            {
+                return BadRequest("Event could not be updated");
+            }
+
             return Ok();
         }
     }

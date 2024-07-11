@@ -10,7 +10,7 @@ const EventDetails = () => {
   const navigate = useNavigate();
   const email = sessionStorage.getItem('user_name');
 
-  const handleParticipate = () =>
+  const handleParticipate = async () =>
   {
     const token = sessionStorage.getItem('access_token');
 
@@ -22,17 +22,27 @@ const EventDetails = () => {
 
     setPending(true);
 
-    fetch(`${serverBaseUrl}/events/participate/`, 
+    const response = await fetch(`${serverBaseUrl}/events/participate/`, 
     {
       method: "POST",
       headers: 
-            {
-              "Content-Type": "application/json",
-              "Authorization": "Bearer " + token
-            },
+        {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + token
+        },
       body: JSON.stringify({ eventId, email })
-    }).then(() => setPending(false)).then(() => alert('Confirmation link sent. Please, check your email!'))
-      .then(() => navigate("/"));
+    }).then(response => response);
+
+    setPending(false)
+
+    if(response.status === 200) {
+      alert('Confirmation link sent. Please, check your email!');
+    }
+    else {
+      alert('Somethig went wrong :(');
+    }
+
+    navigate("/");
   }
 
   return (
@@ -41,7 +51,7 @@ const EventDetails = () => {
         isPending && (
           <div>
             <h3>Sending confirmation email <div className="loading">↻</div></h3><span>{email}</span></div>)}
-      { event && (
+      { event && Number(event.amountOfVacantPlaces) > 0 ? (
         <div>
           <h2>{ event.title }</h2>
             <h3>Theme:</h3>
@@ -54,8 +64,14 @@ const EventDetails = () => {
             <div>{ event.date }</div>
             <h3>Participants:</h3>
             <div>{ event.participants }</div>
+            <h3>Vacant places:</h3>
+            <div>{ event.amountOfVacantPlaces }</div>
         </div>
-      )}
+      ) :
+      (
+        <h1>Sorry but event capacity is full : (</h1>
+      )
+    }
 
       { <button onClick={() => handleParticipate()}>Participate</button> }
     </div>

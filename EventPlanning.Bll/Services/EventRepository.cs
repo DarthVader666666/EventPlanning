@@ -41,9 +41,17 @@ namespace EventPlanning.Bll.Services
             return await _dbContext.Events.Include(x => x.Theme).Include(x => x.SubTheme).ToListAsync();
         }
 
-        public Task<Event?> UpdateAsync(Event item)
+        public async Task<Event?> UpdateAsync(Event item)
         {
-            throw new NotImplementedException();
+            if (item == null)
+            {
+                return null;
+            }
+
+            _dbContext.Events.Update(item);
+            await _dbContext.SaveChangesAsync();
+
+            return item;
         }
     }
 }
