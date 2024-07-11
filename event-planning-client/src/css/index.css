@@ -63,7 +63,7 @@ h1 {
 
 .event-preview {
   text-align: start;
-  min-width:180px;
+  width:180px;
   height: 250px;
   padding: 10px 16px;
   margin: 20px 0;

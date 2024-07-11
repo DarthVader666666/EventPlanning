@@ -44,12 +44,16 @@ const EventDetails = () => {
       { event && (
         <div>
           <h2>{ event.title }</h2>
-          <h3>Location:</h3>
-          <div>{ event.location }</div>
-          <h3>Date:</h3>
-          <div>{ event.date }</div>
-          <h3>Participants:</h3>       
-          <div>{ event.participants }</div>
+            <h3>Theme:</h3>
+            <div>{ event.themeName }</div>
+            <h3>Sub theme:</h3>
+            <div>{ event.subThemeName }</div>
+            <h3>Location:</h3>
+            <div>{ event.location }</div>
+            <h3>Date:</h3>
+            <div>{ event.date }</div>
+            <h3>Participants:</h3>
+            <div>{ event.participants }</div>
         </div>
       )}
 

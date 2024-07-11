@@ -33,12 +33,12 @@ namespace EventPlanning.Bll.Services
 
         public async Task<Event?> GetAsync(object? id)
         {
-            return await _dbContext.Events.FirstOrDefaultAsync(x => x.EventId == (int?)id);
+            return await _dbContext.Events.Include(x => x.Theme).Include(x => x.SubTheme).FirstOrDefaultAsync(x => x.EventId == (int?)id);
         }
 
         public async Task<IEnumerable<Event?>> GetListAsync()
         {
-            return await _dbContext.Events.Include(x => x.Theme).ToListAsync();
+            return await _dbContext.Events.Include(x => x.Theme).Include(x => x.SubTheme).ToListAsync();
         }
 
         public Task<Event?> UpdateAsync(Event item)
