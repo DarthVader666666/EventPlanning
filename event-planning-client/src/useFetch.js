@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-const useFetch = (url) => {
+const useFetch = (url, method, body) => {
   const [data, setData] = useState(null);
   const [isPending, setIsPending] = useState(true);
   const [error, setError] = useState(null);
@@ -10,6 +10,8 @@ const useFetch = (url) => {
 
     fetch(url, 
         { 
+          method: method ? method : 'GET',
+          body: body,
           headers:
           {
             "Accept": "application/json",
