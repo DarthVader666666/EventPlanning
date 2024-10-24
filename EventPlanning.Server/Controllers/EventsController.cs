@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace EventPlanning.Server.Controllers
 {
@@ -93,8 +94,12 @@ namespace EventPlanning.Server.Controllers
             {
                 await _userEventRepository.CreateAsync(userEvent);
             }
-
-            var url = _configuration["ClientUrl"] + $"/confirm/{userEvent.UserId}/{userEvent.EventId}";
+            var url = $"<button>" +
+                $"<a href='{_configuration["ClientUrl"]}/confirm/{userEvent.UserId}/{userEvent.EventId}' " +
+                $"style=\"text-decoration: none; color: black\">" +
+                $"Confirm Participation" +
+                $"</a>" +
+                $"</button>";
 
             var result = await _emailSender.SendEmailAsync(model.Email, "Thank you! Event participation confirmed!", url);
 

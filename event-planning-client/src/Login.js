@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 
 const LogIn = () => {
     const serverBaseUrl = process.env.REACT_APP_API_URL;
-    const [email, setEmail] = useState(null);
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState(null);
     
     const navigate = useNavigate();

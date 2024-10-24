@@ -4,6 +4,7 @@ const useFetch = (url, method, body) => {
   const [data, setData] = useState(null);
   const [isPending, setIsPending] = useState(true);
   const [error, setError] = useState(null);
+  const [status, setStatus] = useState(null);
 
   useEffect(() => {
     const token = sessionStorage.getItem("access_token");
@@ -19,16 +20,18 @@ const useFetch = (url, method, body) => {
           }
         })
         .then(res => {
+          setStatus(res.status);
+
           if(res.status === 401)
           {
             sessionStorage.clear();
             throw Error('You are not authorized.');
           }
-  
+
           if (!res.ok) { // error coming back from server
             throw Error('could not fetch the data for that resource');
-          }       
-          
+          }
+
           return res.json();
         })
         .then(data => {
@@ -40,7 +43,8 @@ const useFetch = (url, method, body) => {
           console.log(err + err.name)
           if (err.name === 'AbortError') {
             console.log('fetch aborted')
-          } else {
+          }
+          else {
             // auto catches network / connection error
             setIsPending(false);
             setError(err.message);
@@ -49,7 +53,7 @@ const useFetch = (url, method, body) => {
       },
    [url,method,body])
 
-  return { data, isPending, error };
+  return { data, isPending, error, status };
 }
 
 export default useFetch;

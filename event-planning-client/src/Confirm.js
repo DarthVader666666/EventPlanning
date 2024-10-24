@@ -1,25 +1,14 @@
 import { useNavigate, useParams } from "react-router";
-import { useState } from "react";
+import useFetch from "./useFetch.js";
 
 const Confirm = () => {
   const { userId } = useParams();  
   const { eventId } = useParams();
   const serverBaseUrl = process.env.REACT_APP_API_URL;
   const navigate = useNavigate();
-  const [status, setStatus] = useState(null);
 
   const email = sessionStorage.getItem('user_name');
-  const token = sessionStorage.getItem('access_token');
-
-  fetch(`${serverBaseUrl}/events/confirm/${userId}/${eventId}`, 
-    {
-      method: "GET",
-      headers: 
-            {
-              "Content-Type": "application/json",
-              "Authorization": "Bearer " + token
-            }
-    }).then(response => setStatus(response.status));
+  const { status } = useFetch(`${serverBaseUrl}/events/confirm/${userId}/${eventId}`, "GET");
 
   return (
     <div className="confirm">
