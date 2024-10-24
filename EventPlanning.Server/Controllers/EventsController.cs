@@ -105,8 +105,7 @@ namespace EventPlanning.Server.Controllers
             else
             {
                 return BadRequest("Error while sending email");
-            }
-            
+            }            
         }
 
         [HttpGet]

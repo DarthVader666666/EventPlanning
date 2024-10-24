@@ -62,18 +62,17 @@ const EventDetails = () => {
             <div>{ event.location }</div>
             <h3>Date:</h3>
             <div>{ event.date }</div>
-            <h3>Participants:</h3>
+            <h3>Performers:</h3>
             <div>{ event.participants }</div>
             <h3>Vacant places:</h3>
             <div>{ event.amountOfVacantPlaces }</div>
+            { <button onClick={() => handleParticipate()}>Participate</button> }
         </div>
       ) :
       (
         <h1>Sorry but event capacity is full : (</h1>
       )
     }
-
-      { <button onClick={() => handleParticipate()}>Participate</button> }
     </div>
   );
 }

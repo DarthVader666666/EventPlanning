@@ -91,7 +91,7 @@ const Create = () => {
 
         {
             (participants.length > 0) &&
-            <label>Participants</label>
+            <label>Performers</label>
         }
         <div>
           {

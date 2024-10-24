@@ -10,9 +10,11 @@ namespace EventPlanning.Data.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.Sql($"INSERT INTO Themes (ThemeName) VALUES ('Music')" +
+            migrationBuilder.Sql(
+                $"INSERT INTO Themes (ThemeName) VALUES ('Music')" +
                 $"INSERT INTO Themes (ThemeName) VALUES ('Sport')" +
-                $"INSERT INTO Themes (ThemeName) VALUES ('Conference')");
+                $"INSERT INTO Themes (ThemeName) VALUES ('Conference')" +
+                $"INSERT INTO Themes (ThemeName) VALUES ('Corporate Party')");
         }
 
         /// <inheritdoc />

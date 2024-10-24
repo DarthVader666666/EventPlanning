@@ -11,6 +11,7 @@ using static EventPlanning.Server.Controllers.AuthorizationController;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+var url = builder.Configuration["ClientUrl"];
 builder.Services.AddCors(opts => opts.AddPolicy("AllowClient", policy =>
 policy.WithOrigins($"{builder.Configuration["ClientUrl"]}")
     .AllowAnyHeader()
@@ -40,7 +41,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 });
 
 builder.Services.AddControllers();
-builder.Services.AddDbContext<EventPlanningDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("LocalDb")));
+builder.Services.AddDbContext<EventPlanningDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("EventDb")));
 builder.Services.ConfigureAutomapper();
 builder.Services.AddScoped<IRepository<Event>, EventRepository>();
 builder.Services.AddScoped<IRepository<Theme>, ThemeRepository>();

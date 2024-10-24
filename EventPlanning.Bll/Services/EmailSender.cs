@@ -12,14 +12,26 @@ namespace EventPlanning.Bll.Services
             _configuration = configuration;
         }
 
-        public async Task<EmailSendOperation> SendEmailAsync(string email, string subject, string message)
+        public async Task<EmailSendOperation?> SendEmailAsync(string email, string subject, string message)
         {
             var sender = _configuration["AzureEmailSender"];
             var connectionString = _configuration["ConnectionStrings:AzureCommunicationService"];
 
             var client = new EmailClient(connectionString);
 
-            return await client.SendAsync(Azure.WaitUntil.Completed, sender, email, subject, message);
+            EmailSendOperation? result = null;
+
+            try
+            {
+                var task = client.SendAsync(Azure.WaitUntil.Completed, sender, email, subject, message);
+                result = await task;
+            }
+            catch (Exception ex) 
+            {
+                Console.Write(ex.Message);
+            }
+
+            return result;
         }
     }
 }

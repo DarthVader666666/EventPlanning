@@ -13,7 +13,7 @@ const EventList = ({ events }) => {
             <div>{ event.location }</div>
             <h3>Date:</h3>
             <div>{ event.date }</div>
-            <h3>Participants:</h3>
+            <h3>Performers:</h3>
             <div>{ event.participants }</div>
           </Link>
         </div>
