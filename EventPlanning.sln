@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34622.214
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventPlanning.Server", "EventPlanning.Server\EventPlanning.Server.csproj", "{FAB640B8-0AFB-47CA-A146-93476410E3A5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventPlanning.Api", "EventPlanning.Server\EventPlanning.Api.csproj", "{FAB640B8-0AFB-47CA-A146-93476410E3A5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventPlanning.Data", "EventPlanning.Data\EventPlanning.Data.csproj", "{4535C221-165F-4033-B460-7A565107375A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventPlanning.Data", "EventPlanning.Data\EventPlanning.Data.csproj", "{4535C221-165F-4033-B460-7A565107375A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventPlanning.Bll", "EventPlanning.Bll\EventPlanning.Bll.csproj", "{44C7093A-402E-4F61-ACDB-99AE209B1642}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventPlanning.Bll", "EventPlanning.Bll\EventPlanning.Bll.csproj", "{44C7093A-402E-4F61-ACDB-99AE209B1642}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
