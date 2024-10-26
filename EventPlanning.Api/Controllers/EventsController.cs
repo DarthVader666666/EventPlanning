@@ -14,7 +14,7 @@ namespace EventPlanning.Server.Controllers
 {
     [EnableCors("AllowClient")]
     [ApiController]
-    [Route("[controller]")]
+    [Route("yellow-sand-066b7f603.5.azurestaticapps.net")]
     public class EventsController : ControllerBase
     {
         private readonly IRepository<Event> _eventRepository;
