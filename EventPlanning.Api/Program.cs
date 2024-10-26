@@ -41,7 +41,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 });
 
 builder.Services.AddControllers();
-builder.Services.AddDbContext<EventPlanningDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("EventDb")));
+
 builder.Services.ConfigureAutomapper();
 builder.Services.AddScoped<IRepository<Event>, EventRepository>();
 builder.Services.AddScoped<IRepository<Theme>, ThemeRepository>();
@@ -50,8 +50,17 @@ builder.Services.AddScoped<IRepository<UserEvent>, UserEventRepository>();
 builder.Services.AddScoped<EmailSender>();
 
 using var scope = builder.Services.BuildServiceProvider().CreateScope();
-var dbContext = scope.ServiceProvider.GetRequiredService<EventPlanningDbContext>();
-dbContext.Database.Migrate();
+
+if (builder.Environment.IsDevelopment())
+{
+    builder.Services.AddDbContext<EventPlanningDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("EventDb")));
+    var dbContext = scope.ServiceProvider.GetRequiredService<EventPlanningDbContext>();
+    dbContext.Database.Migrate();
+}
+else if (builder.Environment.IsProduction())
+{
+    builder.Services.AddDbContext<EventPlanningDbContext>(options => options.UseInMemoryDatabase("EventDb"));
+}
 
 var app = builder.Build();
 
