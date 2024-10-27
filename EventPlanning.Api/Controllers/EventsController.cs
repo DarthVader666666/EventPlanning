@@ -36,7 +36,6 @@ namespace EventPlanning.Server.Controllers
         }
 
         [HttpGet]
-        [Route("/events/")]
         public async Task<IActionResult> Index()
         {
             var events = await _eventRepository.GetListAsync();
@@ -45,7 +44,7 @@ namespace EventPlanning.Server.Controllers
         }
 
         [HttpGet]
-        [Route("/events/{eventId:int}")]
+        [Route("{eventId:int}")]
         public async Task<EventIndexModel> GetEvent([FromRoute] int? eventId)
         {
             var eventEntity = await _eventRepository.GetAsync(eventId);

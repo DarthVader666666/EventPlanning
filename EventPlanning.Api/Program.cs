@@ -49,11 +49,10 @@ builder.Services.AddScoped<IRepository<User>, UserRepository>();
 builder.Services.AddScoped<IRepository<UserEvent>, UserEventRepository>();
 builder.Services.AddScoped<EmailSender>();
 
-using var scope = builder.Services.BuildServiceProvider().CreateScope();
-
 if (builder.Environment.IsDevelopment())
 {
     builder.Services.AddDbContext<EventPlanningDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("EventDb")));
+    using var scope = builder.Services.BuildServiceProvider().CreateScope();
     var dbContext = scope.ServiceProvider.GetRequiredService<EventPlanningDbContext>();
     dbContext.Database.Migrate();
 }
