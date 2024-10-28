@@ -12,9 +12,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuer = true,
-        ValidIssuer = "MyAuthServer",
+        ValidIssuer = "https://event-planning-server.azurewebsites.net/",
         ValidateAudience = true,
-        ValidAudience = "MyAuthClient",
+        ValidAudience = "https://event-planning-server.azurewebsites.net/",
         ValidateLifetime = true,
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("mysupersecret_secretsecretsecretkey!123")),
         ValidateIssuerSigningKey = true,
@@ -23,7 +23,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 
 var app = builder.Build();
 
-app.UseAuthorization();
+//app.UseAuthorization();
 app.UseAuthentication();
 
 app.MapGet("/", () => "Hello World!");
