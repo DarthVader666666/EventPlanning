@@ -11,31 +11,24 @@ using static EventPlanning.Server.Controllers.AuthorizationController;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-//var url = builder.Configuration["ClientUrl"];
-//builder.Services.AddCors(opts => opts.AddPolicy("AllowClient", policy =>
-//policy.WithOrigins($"{builder.Configuration["ClientUrl"]}")
-//    .AllowAnyHeader()
-//    .AllowAnyMethod()
-//    ));
+var url = builder.Configuration["ClientUrl"];
+builder.Services.AddCors(opts => opts.AddPolicy("AllowClient", policy =>
+policy.WithOrigins($"{builder.Configuration["ClientUrl"]}")
+    .AllowAnyHeader()
+    .AllowAnyMethod()
+    ));
 
 builder.Services.AddAuthorization();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 {
     options.TokenValidationParameters = new TokenValidationParameters
     {
-        // указывает, будет ли валидироваться издатель при валидации токена
         ValidateIssuer = true,
-        // строка, представляющая издателя
         ValidIssuer = AuthOptions.ISSUER,
-        // будет ли валидироваться потребитель токена
         ValidateAudience = true,
-        // установка потребителя токена
         ValidAudience = AuthOptions.AUDIENCE,
-        // будет ли валидироваться время существования
         ValidateLifetime = true,
-        // установка ключа безопасности
         IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
-        // валидация ключа безопасности
         ValidateIssuerSigningKey = true,
     };
 });
@@ -48,21 +41,20 @@ builder.Services.AddScoped<IRepository<Theme>, ThemeRepository>();
 builder.Services.AddScoped<IRepository<User>, UserRepository>();
 builder.Services.AddScoped<IRepository<UserEvent>, UserEventRepository>();
 builder.Services.AddScoped<EmailSender>();
-builder.Services.AddDbContext<EventPlanningDbContext>(options => options.UseInMemoryDatabase("EventDb"));
 
-//var connectionString = builder.Configuration.GetConnectionString("EventDb");
+var connectionString = builder.Configuration.GetConnectionString("EventDb");
 
-//if (connectionString != null && builder.Environment.IsDevelopment())
-//{
-//    builder.Services.AddDbContext<EventPlanningDbContext>(options => options.UseSqlServer(connectionString));
-//    using var scope = builder.Services.BuildServiceProvider().CreateScope();
-//    var dbContext = scope.ServiceProvider.GetRequiredService<EventPlanningDbContext>();
-//    dbContext.Database.Migrate();
-//}
-//else
-//{
-//    builder.Services.AddDbContext<EventPlanningDbContext>(options => options.UseInMemoryDatabase("EventDb"));
-//}
+if (connectionString != null && builder.Environment.IsDevelopment())
+{
+    builder.Services.AddDbContext<EventPlanningDbContext>(options => options.UseSqlServer(connectionString));
+    using var scope = builder.Services.BuildServiceProvider().CreateScope();
+    var dbContext = scope.ServiceProvider.GetRequiredService<EventPlanningDbContext>();
+    dbContext.Database.Migrate();
+}
+else
+{
+    builder.Services.AddDbContext<EventPlanningDbContext>(options => options.UseInMemoryDatabase("EventDb"));
+}
 
 var app = builder.Build();
 
