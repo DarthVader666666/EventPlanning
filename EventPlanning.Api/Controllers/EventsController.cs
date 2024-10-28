@@ -13,7 +13,7 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace EventPlanning.Server.Controllers
 {
-    [EnableCors("AllowClient")]
+    //[EnableCors("AllowClient")]
     [ApiController]
     [Route("[controller]")]
     public class EventsController : ControllerBase
