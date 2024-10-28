@@ -6,4 +6,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\EventPlanning.Data\EventPlanning.Data.csproj" />
+  </ItemGroup>
+
 </Project>
