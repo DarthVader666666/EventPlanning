@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventPlanning.Api", "EventP
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventPlanning.Data", "EventPlanning.Data\EventPlanning.Data.csproj", "{EB80DCAA-E541-4C0B-8443-0733E62AC4B1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventPlanning.Bll", "EventPlanning.Bll\EventPlanning.Bll.csproj", "{113FFE62-2BF6-4568-B0F6-AC5533FE027B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{EB80DCAA-E541-4C0B-8443-0733E62AC4B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EB80DCAA-E541-4C0B-8443-0733E62AC4B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EB80DCAA-E541-4C0B-8443-0733E62AC4B1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{113FFE62-2BF6-4568-B0F6-AC5533FE027B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{113FFE62-2BF6-4568-B0F6-AC5533FE027B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{113FFE62-2BF6-4568-B0F6-AC5533FE027B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{113FFE62-2BF6-4568-B0F6-AC5533FE027B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
