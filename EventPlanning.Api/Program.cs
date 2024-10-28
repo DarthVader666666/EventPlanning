@@ -42,19 +42,21 @@ builder.Services.AddScoped<IRepository<User>, UserRepository>();
 builder.Services.AddScoped<IRepository<UserEvent>, UserEventRepository>();
 builder.Services.AddScoped<EmailSender>();
 
-var connectionString = builder.Configuration.GetConnectionString("EventDb");
+builder.Services.AddDbContext<EventPlanningDbContext>(options => options.UseInMemoryDatabase("EventDb"));
 
-if (connectionString != null && builder.Environment.IsDevelopment())
-{
-    builder.Services.AddDbContext<EventPlanningDbContext>(options => options.UseSqlServer(connectionString));
-    using var scope = builder.Services.BuildServiceProvider().CreateScope();
-    var dbContext = scope.ServiceProvider.GetRequiredService<EventPlanningDbContext>();
-    dbContext.Database.Migrate();
-}
-else
-{
-    builder.Services.AddDbContext<EventPlanningDbContext>(options => options.UseInMemoryDatabase("EventDb"));
-}
+//var connectionString = builder.Configuration.GetConnectionString("EventDb");
+
+//if (connectionString != null && builder.Environment.IsDevelopment())
+//{
+//    builder.Services.AddDbContext<EventPlanningDbContext>(options => options.UseSqlServer(connectionString));
+//    using var scope = builder.Services.BuildServiceProvider().CreateScope();
+//    var dbContext = scope.ServiceProvider.GetRequiredService<EventPlanningDbContext>();
+//    dbContext.Database.Migrate();
+//}
+//else
+//{
+//    builder.Services.AddDbContext<EventPlanningDbContext>(options => options.UseInMemoryDatabase("EventDb"));
+//}
 
 var app = builder.Build();
 
