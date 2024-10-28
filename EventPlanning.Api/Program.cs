@@ -35,12 +35,12 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 
 builder.Services.AddControllers();
 
-builder.Services.ConfigureAutomapper();
-builder.Services.AddScoped<IRepository<Event>, EventRepository>();
-builder.Services.AddScoped<IRepository<Theme>, ThemeRepository>();
-builder.Services.AddScoped<IRepository<User>, UserRepository>();
-builder.Services.AddScoped<IRepository<UserEvent>, UserEventRepository>();
-builder.Services.AddScoped<EmailSender>();
+//builder.Services.ConfigureAutomapper();
+//builder.Services.AddScoped<IRepository<Event>, EventRepository>();
+//builder.Services.AddScoped<IRepository<Theme>, ThemeRepository>();
+//builder.Services.AddScoped<IRepository<User>, UserRepository>();
+//builder.Services.AddScoped<IRepository<UserEvent>, UserEventRepository>();
+//builder.Services.AddScoped<EmailSender>();
 
 builder.Services.AddDbContext<EventPlanningDbContext>(options => options.UseInMemoryDatabase("EventDb"));
 
