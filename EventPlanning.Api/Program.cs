@@ -11,12 +11,12 @@ using static EventPlanning.Server.Controllers.AuthorizationController;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-var url = builder.Configuration["ClientUrl"];
-builder.Services.AddCors(opts => opts.AddPolicy("AllowClient", policy =>
-policy.WithOrigins($"{builder.Configuration["ClientUrl"]}")
-    .AllowAnyHeader()
-    .AllowAnyMethod()
-    ));
+//var url = builder.Configuration["ClientUrl"];
+//builder.Services.AddCors(opts => opts.AddPolicy("AllowClient", policy =>
+//policy.WithOrigins($"{builder.Configuration["ClientUrl"]}")
+//    .AllowAnyHeader()
+//    .AllowAnyMethod()
+//    ));
 
 builder.Services.AddAuthorization();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
