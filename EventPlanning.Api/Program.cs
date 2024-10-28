@@ -1,6 +1,6 @@
+using EventPlanning.Api.Configurations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using static EventPlanning.Server.Controllers.AuthorizationController;
 
 var builder = WebApplication.CreateBuilder(args);
 

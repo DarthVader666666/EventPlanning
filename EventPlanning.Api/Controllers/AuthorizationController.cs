@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using EventPlanning.Api.Configurations;
 using EventPlanning.Bll.Interfaces;
 using EventPlanning.Data.Entities;
 using EventPlanning.Server.Models;
@@ -102,16 +103,6 @@ namespace EventPlanning.Server.Controllers
         private async Task<bool> DoesUserExist(string? email)
         {
             return await _userRepository.GetAsync(email) != null;
-        }
-
-        public static class AuthOptions
-        {
-            public const string ISSUER = "MyAuthServer";
-            public const string AUDIENCE = "MyAuthClient";
-            public const int LIFETIME = 20;
-            const string KEY = "mysupersecret_secretsecretsecretkey!123";
-            public static SymmetricSecurityKey GetSymmetricSecurityKey() =>
-                new SymmetricSecurityKey(Encoding.UTF8.GetBytes(KEY));
         }
     }
 }
