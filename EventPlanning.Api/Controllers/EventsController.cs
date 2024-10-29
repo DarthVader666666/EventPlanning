@@ -42,7 +42,7 @@ namespace EventPlanning.Server.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            return Ok(_dbContext.Events.AsEnumerable());
+            return Ok(new Event[] { new Event { Title = "ALALALA", Date = DateTime.Now } });
             //var events = await _eventRepository.GetListAsync();
             //var mappedEvents = _mapper.Map<IEnumerable<Event>, IEnumerable<EventIndexModel>>(events);
             //return Ok(mappedEvents);
