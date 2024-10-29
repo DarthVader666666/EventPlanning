@@ -9,37 +9,40 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddAuthorization();
-builder.Services.AddAuthentication("Bearer").AddJwtBearer(options =>
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 {
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuer = true,
-        ValidIssuer = "https://event-planning-server.azurewebsites.net/",
+        ValidIssuer = AuthOptions.ISSUER,
         ValidateAudience = true,
-        ValidAudience = "https://yellow-sand-066b7f603.5.azurestaticapps.net",
+        ValidAudience = AuthOptions.AUDIENCE,
         ValidateLifetime = true,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("mysupersecret_secretsecretsecretkey!123")),
+        IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
         ValidateIssuerSigningKey = true,
     };
 });
 
-builder.Services.AddDbContext<EventPlanningDbContext>(opt => opt.UseInMemoryDatabase("EventDb"));
-
 builder.Services.AddControllers();
-builder.Services.AddRouting();
+
+builder.Services.AddDbContext<EventPlanningDbContext>(options => options.UseInMemoryDatabase("EventDb"));
+
 
 var app = builder.Build();
 app.UseHttpsRedirection();
-app.UseRouting();
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Events}/{action=Index}/{id?}");
 
-//app.UseStatusCodePages();
+app.UseAuthorization();
 
-//app.UseAuthorization();
-//app.UseAuthentication();
-
-//app.MapGet("/", () => "Hello World!");
+app.MapControllers();
 
 app.Run();
+
+public static class AuthOptions
+{
+    public const string ISSUER = "MyAuthServer";
+    public const string AUDIENCE = "MyAuthClient";
+    public const int LIFETIME = 20;
+    const string KEY = "mysupersecret_secretsecretsecretkey!123";
+    public static SymmetricSecurityKey GetSymmetricSecurityKey() =>
+        new SymmetricSecurityKey(Encoding.UTF8.GetBytes(KEY));
+}
