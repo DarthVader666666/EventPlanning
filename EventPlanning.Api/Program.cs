@@ -1,5 +1,7 @@
 using EventPlanning.Api.Configurations;
+using EventPlanning.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -21,12 +23,23 @@ builder.Services.AddAuthentication("Bearer").AddJwtBearer(options =>
     };
 });
 
+builder.Services.AddDbContext<EventPlanningDbContext>(opt => opt.UseInMemoryDatabase("EventDb"));
+
+builder.Services.AddControllers();
+builder.Services.AddRouting();
+
 var app = builder.Build();
-app.UseStatusCodePages();
+app.UseHttpsRedirection();
+app.UseRouting();
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Events}/{action=Index}/{id?}");
 
-app.UseAuthorization();
-app.UseAuthentication();
+//app.UseStatusCodePages();
 
-app.MapGet("/", () => "Hello World!");
+//app.UseAuthorization();
+//app.UseAuthentication();
+
+//app.MapGet("/", () => "Hello World!");
 
 app.Run();
