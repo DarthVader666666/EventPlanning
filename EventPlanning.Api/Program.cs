@@ -29,6 +29,7 @@ builder.Services.AddDbContext<EventPlanningDbContext>(options => options.UseInMe
 
 
 var app = builder.Build();
+app.UseCors();
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
