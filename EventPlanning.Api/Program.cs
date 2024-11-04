@@ -1,15 +1,25 @@
-using EventPlanning.Api.Configurations;
+using EventPlanning.Bll.Interfaces;
+using EventPlanning.Bll.Services;
 using EventPlanning.Data;
+using EventPlanning.Data.Entities;
+using EventPlanning.Server.Configurations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
+using EventPlanning.Api.Configurations;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Add services to the container.
+var url = builder.Configuration["ClientUrl"];
+builder.Services.AddCors(opts => opts.AddPolicy("AllowClient", policy =>
+policy.WithOrigins($"{builder.Configuration["ClientUrl"]}")
+    .AllowAnyHeader()
+    .AllowAnyMethod()
+    ));
+
 builder.Services.AddAuthorization();
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+builder.Services.AddAuthentication("Azure AD").AddJwtBearer(options =>
 {
     options.TokenValidationParameters = new TokenValidationParameters
     {
@@ -24,12 +34,30 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 });
 
 builder.Services.AddControllers();
+builder.Services.ConfigureAutomapper();
+builder.Services.AddScoped<IRepository<Event>, EventRepository>();
+builder.Services.AddScoped<IRepository<UserEvent>, UserEventRepository>();
+builder.Services.AddScoped<IRepository<User>, UserRepository>();
+builder.Services.AddScoped<EmailSender>();
 
-builder.Services.AddDbContext<EventPlanningDbContext>(options => options.UseInMemoryDatabase("EventDb"));
+var connectionString = builder.Configuration.GetConnectionString("EventDb");
 
+if (builder.Environment.IsDevelopment() && connectionString != null)
+{
+    builder.Services.AddDbContext<EventPlanningDbContext>(options => options.UseSqlServer(connectionString));
+    MigrateDatabase();
+}
+else
+{
+    builder.Services.AddDbContext<EventPlanningDbContext>(options => options.UseInMemoryDatabase("EventDb"));
+    SeedDatabase();
+}
 
 var app = builder.Build();
+
+// Configure the HTTP request pipeline.
 app.UseCors();
+
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
@@ -38,12 +66,16 @@ app.MapControllers();
 
 app.Run();
 
-public static class AuthOptions
+void SeedDatabase()
 {
-    public const string ISSUER = "MyAuthServer";
-    public const string AUDIENCE = "MyAuthClient";
-    public const int LIFETIME = 20;
-    const string KEY = "mysupersecret_secretsecretsecretkey!123";
-    public static SymmetricSecurityKey GetSymmetricSecurityKey() =>
-        new SymmetricSecurityKey(Encoding.UTF8.GetBytes(KEY));
+    using var scope = builder.Services.BuildServiceProvider().CreateScope();
+    var dbContext = scope.ServiceProvider.GetRequiredService<EventPlanningDbContext>();
+    dbContext.Seed();
+}
+
+void MigrateDatabase()
+{
+    using var scope = builder.Services.BuildServiceProvider().CreateScope();
+    var dbContext = scope.ServiceProvider.GetRequiredService<EventPlanningDbContext>();
+    dbContext.Database.Migrate();
 }
