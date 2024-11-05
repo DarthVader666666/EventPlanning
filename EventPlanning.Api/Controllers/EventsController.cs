@@ -3,13 +3,13 @@ using Azure.Communication.Email;
 using EventPlanning.Bll.Interfaces;
 using EventPlanning.Bll.Services;
 using EventPlanning.Data.Entities;
-using EventPlanning.Server.Models;
+using EventPlanning.Api.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 
-namespace EventPlanning.Server.Controllers
+namespace EventPlanning.Api.Controllers
 {
     [EnableCors("AllowClient")]
     [ApiController]

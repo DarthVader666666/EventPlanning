@@ -1,8 +1,7 @@
 ﻿using AutoMapper;
-using EventPlanning.Api.Configurations;
 using EventPlanning.Bll.Interfaces;
 using EventPlanning.Data.Entities;
-using EventPlanning.Server.Models;
+using EventPlanning.Api.Models;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -11,7 +10,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace EventPlanning.Server.Controllers
+namespace EventPlanning.Api.Controllers
 {
     [EnableCors("AllowClient")]
     [ApiController]
@@ -20,11 +19,13 @@ namespace EventPlanning.Server.Controllers
     {
         private readonly IRepository<User> _userRepository;
         private readonly IMapper _mapper;
+        private readonly IConfiguration _configuration;
 
-        public AuthorizationController(IRepository<User> userRepository, IMapper mapper)
+        public AuthorizationController(IRepository<User> userRepository, IMapper mapper, IConfiguration configuration)
         {
             _userRepository = userRepository;
             _mapper = mapper;
+            _configuration = configuration;
         }
 
         [HttpPost]
@@ -41,12 +42,12 @@ namespace EventPlanning.Server.Controllers
             var now = DateTime.UtcNow;
 
             var jwt = new JwtSecurityToken(
-                    issuer: AuthOptions.ISSUER,
-                    audience: AuthOptions.AUDIENCE,
+                    issuer: _configuration["Issuer"],
+                    audience: _configuration["Audience"],
                     notBefore: now,
                     claims: identity.Claims,
-                    expires: now.Add(TimeSpan.FromMinutes(AuthOptions.LIFETIME)),
-                    signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
+                    expires: now.Add(TimeSpan.FromMinutes(double.Parse(_configuration["TokenExpirationTime"]))),
+                    signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["SecurityKey"])), SecurityAlgorithms.HmacSha256));
 
             var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
 

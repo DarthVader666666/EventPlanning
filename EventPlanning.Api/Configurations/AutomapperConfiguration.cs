@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using EventPlanning.Data.Entities;
-using EventPlanning.Server.Models;
+using EventPlanning.Api.Models;
 using Microsoft.IdentityModel.Tokens;
 using System.Globalization;
 
-namespace EventPlanning.Server.Configurations
+namespace EventPlanning.Api.Configurations
 {
     public static class AutomapperConfiguration
     {

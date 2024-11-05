@@ -1,4 +1,4 @@
-﻿namespace EventPlanning.Server.Models
+﻿namespace EventPlanning.Api.Models
 {
     public class EventConfirm
     {

@@ -2,7 +2,7 @@ using EventPlanning.Bll.Interfaces;
 using EventPlanning.Bll.Services;
 using EventPlanning.Data;
 using EventPlanning.Data.Entities;
-using EventPlanning.Server.Configurations;
+using EventPlanning.Api.Configurations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;

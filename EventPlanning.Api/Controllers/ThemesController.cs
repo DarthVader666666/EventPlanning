@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
 using EventPlanning.Bll.Interfaces;
 using EventPlanning.Data.Entities;
-using EventPlanning.Server.Models;
+using EventPlanning.Api.Models;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
-namespace EventPlanning.Server.Controllers
+namespace EventPlanning.Api.Controllers
 {
     [EnableCors("AllowClient")]
     [ApiController]
