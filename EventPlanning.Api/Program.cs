@@ -3,10 +3,9 @@ using EventPlanning.Bll.Services;
 using EventPlanning.Data;
 using EventPlanning.Data.Entities;
 using EventPlanning.Server.Configurations;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using EventPlanning.Api.Configurations;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,11 +23,11 @@ builder.Services.AddAuthentication("Azure AD").AddJwtBearer(options =>
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuer = true,
-        ValidIssuer = AuthOptions.ISSUER,
+        ValidIssuer = builder.Configuration["Issuer"],
         ValidateAudience = true,
-        ValidAudience = AuthOptions.AUDIENCE,
+        ValidAudience = builder.Configuration["Audience"],
         ValidateLifetime = true,
-        IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["SecurityKey"])),
         ValidateIssuerSigningKey = true,
     };
 });
@@ -38,6 +37,7 @@ builder.Services.ConfigureAutomapper();
 builder.Services.AddScoped<IRepository<Event>, EventRepository>();
 builder.Services.AddScoped<IRepository<UserEvent>, UserEventRepository>();
 builder.Services.AddScoped<IRepository<User>, UserRepository>();
+builder.Services.AddScoped<IRepository<Theme>, ThemeRepository>();
 builder.Services.AddScoped<EmailSender>();
 
 var connectionString = builder.Configuration.GetConnectionString("EventDb");
