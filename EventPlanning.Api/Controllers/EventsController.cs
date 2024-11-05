@@ -52,6 +52,7 @@ namespace EventPlanning.Server.Controllers
             return mappedEvent;
         }
 
+
         [HttpPost]
         [Route("create")]
         [Authorize(Roles = "User, Admin")]
