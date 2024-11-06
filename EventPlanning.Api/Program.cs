@@ -75,6 +75,6 @@ void MigrateSeedDatabase(EventPlanningDbContext? dbContext)
     }
     else
     {
-        dbContext?.Database.Migrate();
+        dbContext?.Seed();
     }
 }
