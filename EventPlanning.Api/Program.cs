@@ -45,13 +45,14 @@ var connectionString = builder.Configuration.GetConnectionString("EventDb");
 if (builder.Environment.IsDevelopment() && connectionString != null)
 {
     builder.Services.AddDbContext<EventPlanningDbContext>(options => options.UseSqlServer(connectionString));
-    MigrateDatabase();
 }
 else
 {
     builder.Services.AddDbContext<EventPlanningDbContext>(options => options.UseInMemoryDatabase("EventDb"));
-    SeedDatabase();
 }
+
+using var scope = builder.Services?.BuildServiceProvider()?.CreateScope();
+MigrateSeedDatabase(scope?.ServiceProvider.GetRequiredService<EventPlanningDbContext>());
 
 var app = builder.Build();
 
@@ -66,16 +67,14 @@ app.MapControllers();
 
 app.Run();
 
-void SeedDatabase()
+void MigrateSeedDatabase(EventPlanningDbContext? dbContext)
 {
-    using var scope = builder.Services.BuildServiceProvider().CreateScope();
-    var dbContext = scope.ServiceProvider.GetRequiredService<EventPlanningDbContext>();
-    dbContext.Seed();
-}
-
-void MigrateDatabase()
-{
-    using var scope = builder.Services.BuildServiceProvider().CreateScope();
-    var dbContext = scope.ServiceProvider.GetRequiredService<EventPlanningDbContext>();
-    dbContext.Database.Migrate();
+    if (builder.Environment.IsDevelopment())
+    {
+        dbContext?.Database.Migrate();
+    }
+    else
+    {
+        dbContext?.Database.Migrate();
+    }
 }
