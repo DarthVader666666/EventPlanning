@@ -42,14 +42,11 @@ builder.Services.AddScoped<EmailSender>();
 
 var connectionString = builder.Configuration.GetConnectionString("EventDb");
 
-if (builder.Environment.IsDevelopment() && connectionString != null)
-{
-    builder.Services.AddDbContext<EventPlanningDbContext>(options => options.UseSqlServer(connectionString));
-}
-else
-{
-    builder.Services.AddDbContext<EventPlanningDbContext>(options => options.UseInMemoryDatabase("EventDb"));
-}
+Action<DbContextOptionsBuilder> action = builder.Environment.IsDevelopment() && connectionString != null 
+    ? options => options.UseSqlServer(connectionString)
+    : options => options.UseInMemoryDatabase("EventDb");
+
+builder.Services.AddDbContext<EventPlanningDbContext>(action);
 
 using var scope = builder.Services?.BuildServiceProvider()?.CreateScope();
 MigrateSeedDatabase(scope?.ServiceProvider.GetRequiredService<EventPlanningDbContext>());
