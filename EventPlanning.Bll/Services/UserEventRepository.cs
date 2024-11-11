@@ -39,7 +39,7 @@ namespace EventPlanning.Bll.Services
             return Task.Run(() => userEvent);
         }
 
-        public Task<IEnumerable<UserEvent?>> GetListAsync()
+        public Task<IEnumerable<UserEvent?>> GetListAsync(object? id)
         {
             throw new NotImplementedException();
         }

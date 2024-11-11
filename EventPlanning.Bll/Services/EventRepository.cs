@@ -36,7 +36,7 @@ namespace EventPlanning.Bll.Services
             return await _dbContext.Events.Include(x => x.Theme).Include(x => x.SubTheme).FirstOrDefaultAsync(x => x.EventId == (int?)id);
         }
 
-        public async Task<IEnumerable<Event?>> GetListAsync()
+        public async Task<IEnumerable<Event?>> GetListAsync(object? id)
         {
             return await _dbContext.Events.Include(x => x.Theme).Include(x => x.SubTheme).ToListAsync();
         }

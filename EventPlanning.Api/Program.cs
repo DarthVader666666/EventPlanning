@@ -6,31 +6,37 @@ using EventPlanning.Api.Configurations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-var url = builder.Configuration["ClientUrl"];
 builder.Services.AddCors(opts => opts.AddPolicy("AllowClient", policy =>
 policy.WithOrigins($"{builder.Configuration["ClientUrl"]}")
     .AllowAnyHeader()
     .AllowAnyMethod()
     ));
 
-builder.Services.AddAuthorization();
-builder.Services.AddAuthentication("Azure AD").AddJwtBearer(options =>
+builder.Services.AddAuthentication(x =>
+{ 
+    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
 {
     options.TokenValidationParameters = new TokenValidationParameters
     {
-        ValidateIssuer = true,
         ValidIssuer = builder.Configuration["Issuer"],
-        ValidateAudience = true,
         ValidAudience = builder.Configuration["Audience"],
-        ValidateLifetime = true,
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["SecurityKey"])),
+        ValidateIssuer = true,
+        ValidateAudience = true,
         ValidateIssuerSigningKey = true,
+        ValidateLifetime = true,
     };
 });
+
+builder.Services.AddAuthorization();
 
 builder.Services.AddControllers();
 builder.Services.ConfigureAutomapper();
@@ -58,9 +64,13 @@ app.UseCors();
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+//app.MapPost("events", () => Results.Ok())
+//    .RequireAuthorization("Admin");
 
 app.Run();
 

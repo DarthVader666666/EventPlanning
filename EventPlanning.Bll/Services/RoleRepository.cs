@@ -1,46 +1,45 @@
 ﻿using EventPlanning.Bll.Interfaces;
 using EventPlanning.Data;
 using EventPlanning.Data.Entities;
-using Microsoft.EntityFrameworkCore;
 
 namespace EventPlanning.Bll.Services
 {
-    public class ThemeRepository : IRepository<Theme>
+    public class RoleRepository : IRepository<Role>
     {
         private readonly EventPlanningDbContext _dbContext;
 
-        public ThemeRepository(EventPlanningDbContext dbContext)
+        public RoleRepository(EventPlanningDbContext dbContext)
         {
             _dbContext = dbContext;
         }
 
-        public Task<Theme?> CreateAsync(Theme item)
+        public Task<Role?> CreateAsync(Role item)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Theme?> DeleteAsync(object? id)
+        public Task<Role?> DeleteAsync(object? id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> ExistsAsync(Theme item)
+        public Task<bool> ExistsAsync(Role item)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Theme?> GetAsync(object? id)
+        public Task<Role?> GetAsync(object? id)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<Theme?>> GetListAsync(object? id)
+        public async Task<IEnumerable<Role>?> GetListAsync(object? userId)
         {
-            var themes = _dbContext.Themes.Include(x => x.SubThemes);
-            return await Task.Run(() => themes.ToList());
+            return _dbContext.UserRoles.Where(x => x.UserId == (int?)userId)
+                .SelectMany(userRole => _dbContext.Roles.Where(role => userRole.RoleId == role.RoleId));
         }
 
-        public Task<Theme?> UpdateAsync(Theme item)
+        public Task<Role?> UpdateAsync(Role item)
         {
             throw new NotImplementedException();
         }

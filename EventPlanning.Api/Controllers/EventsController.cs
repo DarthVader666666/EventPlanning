@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
+using EventPlanning.Api.Attributes;
 
 namespace EventPlanning.Api.Controllers
 {
@@ -55,7 +56,8 @@ namespace EventPlanning.Api.Controllers
 
         [HttpPost]
         [Route("create")]
-        [Authorize(Roles = "User, Admin")]
+        [Authorize]
+        [RequiresClaim("Admin", "true")]
         public async Task<IActionResult> Create(EventCreateModel model)
         {
             try

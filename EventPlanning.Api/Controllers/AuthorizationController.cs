@@ -18,12 +18,14 @@ namespace EventPlanning.Api.Controllers
     public class AuthorizationController : ControllerBase
     {
         private readonly IRepository<User> _userRepository;
+        private readonly IRepository<Role> _roleRepository;
         private readonly IMapper _mapper;
         private readonly IConfiguration _configuration;
 
-        public AuthorizationController(IRepository<User> userRepository, IMapper mapper, IConfiguration configuration)
+        public AuthorizationController(IRepository<User> userRepository, IRepository<Role> roleRepository, IMapper mapper, IConfiguration configuration)
         {
             _userRepository = userRepository;
+            _roleRepository = roleRepository;
             _mapper = mapper;
             _configuration = configuration;
         }
@@ -87,10 +89,12 @@ namespace EventPlanning.Api.Controllers
 
             if (user != null)
             {
+                var roles = await _roleRepository.GetListAsync(user.UserId);
+
                 var claims = new List<Claim>
                 {
                     new Claim(ClaimsIdentity.DefaultNameClaimType, user.Email ?? "Anonymus"),
-                    new Claim(ClaimsIdentity.DefaultRoleClaimType, "User")
+                    new Claim(ClaimsIdentity.DefaultRoleClaimType, string.Join(", ", roles.Select(x => x?.RoleName)))
                 };
 
                 ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, "Token", ClaimsIdentity.DefaultNameClaimType, "User");
