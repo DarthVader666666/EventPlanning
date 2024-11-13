@@ -1,6 +1,7 @@
 ﻿using EventPlanning.Bll.Interfaces;
 using EventPlanning.Data.Entities;
 using JsonFlatFileDataStore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace EventPlanning.Bll.Services.JsonRepositories
 {
@@ -8,16 +9,22 @@ namespace EventPlanning.Bll.Services.JsonRepositories
     {
         private readonly IDocumentCollection<Role> _roleCollection;
         private readonly IDocumentCollection<UserRole> _userRoleCollection;
+        private int nextRoleId;
 
         public RoleJsonRepository(DataStore dataStore)
         {
             _roleCollection = dataStore.GetCollection<Role>();
             _userRoleCollection = dataStore.GetCollection<UserRole>();
+            var collection = _roleCollection.AsQueryable();
+            nextRoleId = collection.IsNullOrEmpty() ? 1 : collection.Max(x => x.RoleId) + 1;
         }
 
-        public Task<Role?> CreateAsync(Role item)
+        public async Task<Role?> CreateAsync(Role item)
         {
-            throw new NotImplementedException();
+            item.RoleId = nextRoleId++;
+            var result = await _roleCollection.InsertOneAsync(item);
+
+            return result ? item : null;
         }
 
         public Task<Role?> DeleteAsync(object? id)

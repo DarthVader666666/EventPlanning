@@ -2,6 +2,7 @@
 using EventPlanning.Data.Entities;
 using JsonFlatFileDataStore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace EventPlanning.Bll.Services.JsonRepositories
 {
@@ -9,16 +10,22 @@ namespace EventPlanning.Bll.Services.JsonRepositories
     {
         private readonly IDocumentCollection<Theme> _themeCollection;
         private readonly IDocumentCollection<SubTheme> _subThemeCollection;
+        private int nextThemeId;
 
         public ThemeJsonRepository(DataStore dataStore)
         {
             _themeCollection = dataStore.GetCollection<Theme>();
             _subThemeCollection = dataStore.GetCollection<SubTheme>();
+            var collection = _themeCollection.AsQueryable();
+            nextThemeId = collection.IsNullOrEmpty() ? 1 : collection.Max(x => x.ThemeId) + 1;
         }
 
-        public Task<Theme?> CreateAsync(Theme item)
+        public async Task<Theme?> CreateAsync(Theme item)
         {
-            throw new NotImplementedException();
+            item.ThemeId = nextThemeId++;
+            var result = await _themeCollection.InsertOneAsync(item);
+
+            return result ? item : null;
         }
 
         public Task<Theme?> DeleteAsync(object? id)

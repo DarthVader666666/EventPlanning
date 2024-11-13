@@ -39,16 +39,16 @@ builder.Services.AddAuthorization();
 builder.Services.AddControllers();
 builder.Services.ConfigureAutomapper();
 
-if (builder.Environment.IsDevelopment())
+var connectionString = builder.Configuration.GetConnectionString("EventDb");
+builder.Services.AddDbContext<EventPlanningDbContext>(options => options.UseSqlServer(connectionString));
+
+if (!builder.Environment.IsDevelopment())
 {
     builder.Services.AddScoped<IRepository<Event>, EventRepository>();
     builder.Services.AddScoped<IRepository<UserEvent>, UserEventRepository>();
     builder.Services.AddScoped<IRepository<User>, UserRepository>();
     builder.Services.AddScoped<IRepository<Role>, RoleRepository>();
     builder.Services.AddScoped<IRepository<Theme>, ThemeRepository>();
-
-    var connectionString = builder.Configuration.GetConnectionString("EventDb");
-    builder.Services.AddDbContext<EventPlanningDbContext>(options => options.UseSqlServer(connectionString));
 }
 else
 {
@@ -61,7 +61,6 @@ else
     builder.Services.AddScoped<IRepository<Theme>, ThemeJsonRepository>();
     builder.Services.AddScoped(serviceProvider => new DataStore(path, useLowerCamelCase: false));
 }
-
 
 builder.Services.AddScoped<EmailSender>();
 
@@ -87,23 +86,26 @@ app.Run();
 
 async Task MigrateSeedDatabase(IServiceScope? scope)
 {
-    if (builder.Environment.IsDevelopment())
+    if (!builder.Environment.IsDevelopment())
     {
         var dbContext = scope?.ServiceProvider.GetRequiredService<EventPlanningDbContext>();
         dbContext?.Database.Migrate();
     }
     else
     {
-        var dataStore = scope?.ServiceProvider.GetRequiredService<DataStore>();
-        var userCollection = dataStore.GetCollection<User>();
-        var roleCollection = dataStore.GetCollection<Role>();
-        var userRoleCollection = dataStore.GetCollection<UserRole>();
+        var userJsonRepository = scope?.ServiceProvider.GetRequiredService<IRepository<User>>();
+        var roleJsonRepository = scope?.ServiceProvider.GetRequiredService<IRepository<Role>>();
+        var userRoleCollection = scope?.ServiceProvider.GetRequiredService<DataStore>().GetCollection<UserRole>();
 
-        if (!userCollection.AsQueryable().Any(user => user.Email == "rumyancer@gmail.com"))
+        if (!(await userJsonRepository.GetListAsync()).Any(user => user.Email == builder.Configuration["AdminEmail"]))
         {
-            await userCollection.InsertOneAsync(new User { UserId = 1, Email = "rumyancer@gmail.com", Password = "Haemorr_8421" });
-            await roleCollection.InsertOneAsync(new Role { RoleId = 1, RoleName = "Admin" });
-            await userRoleCollection.InsertOneAsync(new UserRole {  RoleId = 1, UserId = 1 });
+            var user = await userJsonRepository.CreateAsync(new User { Email = builder.Configuration["AdminEmail"], Password = builder.Configuration["AdminPassword"] });
+            var role = await roleJsonRepository.CreateAsync(new Role { RoleName = "Admin" });
+
+            if (user != null && role != null)
+            { 
+                await userRoleCollection.InsertOneAsync(new UserRole {  RoleId = role.RoleId, UserId = user.UserId });
+            }
         }
     }
 }

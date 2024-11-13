@@ -1,8 +1,7 @@
 ﻿using EventPlanning.Bll.Interfaces;
-using EventPlanning.Data;
 using EventPlanning.Data.Entities;
 using JsonFlatFileDataStore;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace EventPlanning.Bll.Services.JsonRepositories
 {
@@ -11,18 +10,22 @@ namespace EventPlanning.Bll.Services.JsonRepositories
         private readonly IDocumentCollection<Event> _eventCollection;
         private readonly IDocumentCollection<Theme> _themeCollection;
         private readonly IDocumentCollection<SubTheme> _subThemeCollection;
+        private int nextEventId;
 
         public EventJsonRepository(DataStore dataStore)
         {
             _eventCollection = dataStore.GetCollection<Event>();
             _themeCollection = dataStore.GetCollection<Theme>();
             _subThemeCollection = dataStore.GetCollection<SubTheme>();
+            var collection = _eventCollection.AsQueryable();
+            nextEventId = collection.IsNullOrEmpty() ? 1 : collection.Max(x => x.EventId) + 1;
         }
 
         public async Task<Event?> CreateAsync(Event item)
         {
-            await _eventCollection.InsertOneAsync(item);
-            return item;
+            item.EventId = nextEventId++;
+            var result = await _eventCollection.InsertOneAsync(item);
+            return result ? item : null;
         }
 
         public Task<Event?> DeleteAsync(object? id)
@@ -58,7 +61,6 @@ namespace EventPlanning.Bll.Services.JsonRepositories
                 
                 return e;
             });
-
 
             return events;
         }

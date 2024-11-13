@@ -1,20 +1,25 @@
 ﻿using EventPlanning.Bll.Interfaces;
 using EventPlanning.Data.Entities;
 using JsonFlatFileDataStore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace EventPlanning.Bll.Services.JsonRepositories
 {
     public class UserJsonRepository : IRepository<User>
     {
         private readonly IDocumentCollection<User> _userCollection;
+        private int nextUserId;
 
         public UserJsonRepository(DataStore dataStore)
         {
             _userCollection = dataStore.GetCollection<User>();
+            var collection = _userCollection.AsQueryable();
+            nextUserId = collection.IsNullOrEmpty() ? 1 : collection.Max(x => x.UserId) + 1;
         }
 
         public async Task<User?> CreateAsync(User item)
         {
+            item.UserId = nextUserId++;
             await _userCollection.InsertOneAsync(item);
             return item;
         }
@@ -55,9 +60,9 @@ namespace EventPlanning.Bll.Services.JsonRepositories
                 : null);
         }
 
-        public Task<IEnumerable<User?>> GetListAsync(object? id)
+        public Task<IEnumerable<User?>> GetListAsync(object? id = null)
         {
-            throw new NotImplementedException();
+            return Task.Run(() => _userCollection.AsQueryable());
         }
 
         public Task<User?> UpdateAsync(User item)
