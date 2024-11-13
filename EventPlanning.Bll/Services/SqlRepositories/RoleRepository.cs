@@ -2,7 +2,7 @@
 using EventPlanning.Data;
 using EventPlanning.Data.Entities;
 
-namespace EventPlanning.Bll.Services
+namespace EventPlanning.Bll.Services.SqlRepositories
 {
     public class RoleRepository : IRepository<Role>
     {

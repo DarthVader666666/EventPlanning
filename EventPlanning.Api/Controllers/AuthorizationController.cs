@@ -90,14 +90,15 @@ namespace EventPlanning.Api.Controllers
             if (user != null)
             {
                 var roles = await _roleRepository.GetListAsync(user.UserId);
+                var roleType = string.Join(", ", roles.Select(x => x?.RoleName));
 
                 var claims = new List<Claim>
                 {
                     new Claim(ClaimsIdentity.DefaultNameClaimType, user.Email ?? "Anonymus"),
-                    new Claim(ClaimsIdentity.DefaultRoleClaimType, string.Join(", ", roles.Select(x => x?.RoleName)))
+                    new Claim(ClaimsIdentity.DefaultRoleClaimType, roleType)
                 };
 
-                ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, "Token", ClaimsIdentity.DefaultNameClaimType, "User");
+                ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, "Token", ClaimsIdentity.DefaultNameClaimType, roleType);
 
                 return claimsIdentity;
             }

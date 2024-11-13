@@ -56,8 +56,8 @@ namespace EventPlanning.Api.Controllers
 
         [HttpPost]
         [Route("create")]
-        [Authorize]
-        [RequiresClaim("Admin", "true")]
+        [Authorize(Roles = "Admin")]
+        //[RequiresClaim("Admin", "true")]
         public async Task<IActionResult> Create(EventCreateModel model)
         {
             try

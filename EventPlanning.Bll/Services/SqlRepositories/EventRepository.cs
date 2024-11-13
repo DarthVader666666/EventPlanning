@@ -3,7 +3,7 @@ using EventPlanning.Data;
 using EventPlanning.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace EventPlanning.Bll.Services
+namespace EventPlanning.Bll.Services.SqlRepositories
 {
     public class EventRepository : IRepository<Event>
     {
@@ -18,7 +18,7 @@ namespace EventPlanning.Bll.Services
         {
             await _dbContext.Events.AddAsync(item);
             await _dbContext.SaveChangesAsync();
-            return item;    
+            return item;
         }
 
         public Task<Event?> DeleteAsync(object? id)

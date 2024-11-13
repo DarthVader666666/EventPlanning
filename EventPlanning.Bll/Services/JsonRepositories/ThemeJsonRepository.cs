@@ -1,17 +1,19 @@
 ﻿using EventPlanning.Bll.Interfaces;
-using EventPlanning.Data;
 using EventPlanning.Data.Entities;
+using JsonFlatFileDataStore;
 using Microsoft.EntityFrameworkCore;
 
-namespace EventPlanning.Bll.Services
+namespace EventPlanning.Bll.Services.JsonRepositories
 {
-    public class ThemeRepository : IRepository<Theme>
+    public class ThemeJsonRepository : IRepository<Theme>
     {
-        private readonly EventPlanningDbContext _dbContext;
+        private readonly IDocumentCollection<Theme> _themeCollection;
+        private readonly IDocumentCollection<SubTheme> _subThemeCollection;
 
-        public ThemeRepository(EventPlanningDbContext dbContext)
+        public ThemeJsonRepository(DataStore dataStore)
         {
-            _dbContext = dbContext;
+            _themeCollection = dataStore.GetCollection<Theme>();
+            _subThemeCollection = dataStore.GetCollection<SubTheme>();
         }
 
         public Task<Theme?> CreateAsync(Theme item)
@@ -36,7 +38,7 @@ namespace EventPlanning.Bll.Services
 
         public async Task<IEnumerable<Theme?>> GetListAsync(object? id)
         {
-            var themes = _dbContext.Themes.Include(x => x.SubThemes);
+            var themes = ((IQueryable<Theme>)_themeCollection.AsQueryable()).Include(x => x.SubThemes);
             return await Task.Run(() => themes.ToList());
         }
 

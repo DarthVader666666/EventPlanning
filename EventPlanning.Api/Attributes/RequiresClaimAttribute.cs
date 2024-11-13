@@ -19,7 +19,7 @@ namespace EventPlanning.Api.Attributes
         {
             if (!context.HttpContext.User.HasClaim(_claimName, _claimValue))
             {
-                context.Result = new ForbidResult();
+                //context.Result = new ForbidResult();
             }
         }
     }

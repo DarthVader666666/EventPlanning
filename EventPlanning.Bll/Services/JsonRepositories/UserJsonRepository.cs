@@ -1,22 +1,21 @@
 ﻿using EventPlanning.Bll.Interfaces;
-using EventPlanning.Data;
 using EventPlanning.Data.Entities;
+using JsonFlatFileDataStore;
 
-namespace EventPlanning.Bll.Services
+namespace EventPlanning.Bll.Services.JsonRepositories
 {
-    public class UserRepository : IRepository<User>
+    public class UserJsonRepository : IRepository<User>
     {
-        private readonly EventPlanningDbContext _dbContext;
+        private readonly IDocumentCollection<User> _userCollection;
 
-        public UserRepository(EventPlanningDbContext dbContext)
+        public UserJsonRepository(DataStore dataStore)
         {
-            _dbContext = dbContext;
+            _userCollection = dataStore.GetCollection<User>();
         }
 
         public async Task<User?> CreateAsync(User item)
         {
-            _dbContext.Users.Add(item);
-            await _dbContext.SaveChangesAsync();
+            await _userCollection.InsertOneAsync(item);
             return item;
         }
 
@@ -37,11 +36,9 @@ namespace EventPlanning.Bll.Services
                 return Task.FromResult<User?>(null);
             }
 
-            var user = _dbContext.Users.Any() 
-                ? _dbContext.Users.FirstOrDefault(x => x.Email == (string?)email)
-                : null;
+            var users = _userCollection.AsQueryable();
 
-            return Task.Run(() => user);
+            return Task.Run(() => users.Any() ? users.FirstOrDefault(x => x.Email == (string?)email) : null);
         }
 
         public Task<User?> GetAsync(object? IdOrEmail)
@@ -51,12 +48,11 @@ namespace EventPlanning.Bll.Services
                 return Task.FromResult<User?>(null);
             }
 
-            var user = _dbContext.Users.Any()
-                ? _dbContext.Users.FirstOrDefault(x =>
-                IdOrEmail is string && ((string?)IdOrEmail!).Contains('@') ? x.Email == (string?)IdOrEmail : x.UserId == (int?)IdOrEmail)
-                : null;
+            var users = _userCollection.AsQueryable();
 
-            return Task.Run(() => user);
+            return Task.Run(() => users.Any() 
+                ? users.FirstOrDefault(x => IdOrEmail is string && ((string?)IdOrEmail!).Contains('@') ? x.Email == (string?)IdOrEmail : x.UserId == (int?)IdOrEmail) 
+                : null);
         }
 
         public Task<IEnumerable<User?>> GetListAsync(object? id)
