@@ -42,7 +42,7 @@ builder.Services.ConfigureAutomapper();
 var connectionString = builder.Configuration.GetConnectionString("EventDb");
 builder.Services.AddDbContext<EventPlanningDbContext>(options => options.UseSqlServer(connectionString));
 
-if (!builder.Environment.IsDevelopment())
+if (builder.Environment.IsDevelopment())
 {
     builder.Services.AddScoped<IRepository<Event>, EventRepository>();
     builder.Services.AddScoped<IRepository<UserEvent>, UserEventRepository>();
@@ -86,7 +86,7 @@ app.Run();
 
 async Task MigrateSeedDatabase(IServiceScope? scope)
 {
-    if (!builder.Environment.IsDevelopment())
+    if (builder.Environment.IsDevelopment())
     {
         var dbContext = scope?.ServiceProvider.GetRequiredService<EventPlanningDbContext>();
         dbContext?.Database.Migrate();
